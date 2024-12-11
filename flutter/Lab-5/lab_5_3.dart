@@ -1,18 +1,20 @@
-// WAP that creates List with following value:“Delhi”, “Mumbai”, “Bangalore”, “Hyderabad” and
-// “Ahmedabad” Replace “Ahmedabad” with “Surat” in above List.
-
 void main() {
-  List<String> citys = ["Delhi", "Mumbai" , "Bangalore", "Hyderabad", "Ahmedabad"];
+  List<String> cities = [
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Hyderabad",
+    "Ahmedabad"
+  ];
 
-  int idx = citys.indexOf("Ahmedabad");
-  citys[idx] = "Surat";
-  print(citys);
+  print("Original List: $cities");
 
-  // citys.asMap().forEach((index,value) {
-  //   if(citys[index] == "Ahmedabad") {
-  //     citys[index] = "Surat";
-  //   };
-  // });
-  //
-  print(citys);
+  // Check if the city exists before replacing
+  int index = cities.indexOf("Ahmedabad");
+  if (index != -1) {
+    cities[index] = "Surat";
+    print("Updated List: $cities");
+  } else {
+    print("City 'Ahmedabad' not found in the list.");
   }
+}
