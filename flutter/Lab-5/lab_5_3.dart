@@ -9,7 +9,6 @@ void main() {
 
   print("Original List: $cities");
 
-  // Check if the city exists before replacing
   int index = cities.indexOf("Ahmedabad");
   if (index != -1) {
     cities[index] = "Surat";

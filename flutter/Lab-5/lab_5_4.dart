@@ -1,16 +1,40 @@
-// WAP to create and read phonebook dictionary.
+import 'dart:io';
+
 void main() {
-  List<Map<String,String>> dictionary = [
-    {"Kamlesh":"99844 33421"},
-    {"Mahesh":"99844 22123"},
-    {"Ramesh":"98233 33421"},
-    {"Suresh":"95594 33421"},
-    {"Manoj":"90994 33421"},
-    {"Mukesh":"90993 33421"},
-    {"Ramesh":"90999 33421"},
-  ];
+  Map<String, String> phoneDiary = {};
 
+  print("Enter the number of entries: ");
+  int? numberOfEntries = int.tryParse(stdin.readLineSync()!);
 
+  if (numberOfEntries == null || numberOfEntries <= 0) {
+    print("Please enter a valid positive number.");
+    return;
+  }
 
-  print(dictionary);
+  for (int i = 0; i < numberOfEntries; i++) {
+    print("Enter Name (Key) for entry ${i + 1}:");
+    String? key = stdin.readLineSync();
+    if (key == null || key.trim().isEmpty) {
+      print("Invalid input. Name cannot be empty.");
+      i--; // Retry current entry
+      continue;
+    }
+
+    print("Enter Phone Number (Value) for $key:");
+    String? value = stdin.readLineSync();
+    if (value == null || value.trim().isEmpty) {
+      print("Invalid input. Phone number cannot be empty.");
+      i--; // Retry current entry
+      continue;
+    }
+
+    // Add the key-value pair to the phone diary
+    phoneDiary[key] = value;
+  }
+
+  // Print the phonebook
+  print("\nPhonebook Entries:");
+  phoneDiary.forEach((key, value) {
+    print("Name: $key, Phone Number: $value");
+  });
 }
