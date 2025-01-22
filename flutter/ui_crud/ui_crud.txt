@@ -1,0 +1,202 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class Usercrud extends StatefulWidget {
+  const Usercrud({super.key});
+
+  @override
+  State<Usercrud> createState() => _UsercrudState();
+}
+
+class _UsercrudState extends State<Usercrud> {
+  TextEditingController searchController = TextEditingController();
+  TextEditingController itemController = TextEditingController();
+
+  List<String> items = [];
+  List<String> filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredItems = items;
+    searchController.addListener(SearchUser);
+  }
+
+  void SearchUser() {
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      filteredItems =
+          items.where((item) => item.toLowerCase().contains(query)).toList();
+    });
+  }
+
+  void AddUser() {
+    if (itemController.text.isNotEmpty) {
+      setState(() {
+        items.add(itemController.text);
+        filteredItems = List.from(items);
+      });
+      itemController.clear();
+    }
+  }
+
+  void EditUser(int index) {
+    itemController.text = items[index];
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit User'),
+        content: TextField(
+          controller: itemController,
+          decoration: InputDecoration(hintText: 'Enter new User name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              setState(() {
+                items[index] = itemController.text;
+                filteredItems = List.from(items);
+              });
+              itemController.clear();
+              Navigator.of(context).pop();
+            },
+            child: Text('Save'),
+          ),
+          TextButton(
+            onPressed: () {
+              itemController.clear();
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void DeleteUser(int index) {
+    setState(() {
+      items.removeAt(index);
+      filteredItems = List.from(items);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'User List',
+          style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: itemController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter item name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: AddUser,
+                  child: Icon(
+                    CupertinoIcons.add_circled_solid,
+                    size: 50,
+                    color: Colors.cyan,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: searchController,
+              decoration: InputDecoration(
+                labelText: 'Search',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredItems.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Center(
+                          child: Text(
+                            filteredItems[index],
+                            style: TextStyle(
+                                color: Colors.black, fontWeight: FontWeight.bold),
+                          )),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.green,
+                            ),
+                            onPressed: () => EditUser(index),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Confirm Delete'),
+                                  content: Text(
+                                      'Are you sure you want to delete this user?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        // If user confirms deletion
+                                        DeleteUser(index);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Yes'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // If user cancels deletion
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('No'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
