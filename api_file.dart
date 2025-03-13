@@ -79,3 +79,8 @@ class Api_Service {
     }
   }
 }
+
+
+http: ^1.3.0
+  progress_dialog_null_safe: ^3.0.0
+  connectivity_plus: ^6.1.3
